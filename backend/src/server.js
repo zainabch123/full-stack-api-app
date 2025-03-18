@@ -16,20 +16,57 @@ app.use(express.json());
 // Tell express to use a URL Encoding middleware
 app.use(express.urlencoded({ extended: true }));
 
-
 //Add routers below:
-app.get("/products", async function(req, res) {
-    try {
-        const response = await fetch("https://dummyjson.com/products");
-        const data = await response.json();
+app.get("/products", async function (req, res) {
+  try {
+    const response = await fetch("https://dummyjson.com/products");
+    const data = await response.json();
+    res.status(200).json({ data: data });
+  } catch (error) {
+    console.log("Error:", error);
+    res.status(500).json({ Error: "An error occurred while fetching data" });
+  }
+});
 
-        res.status(200).json({ data: data });
-    } catch (error) {
-        console.log("Error:", error);
-        res.status(500).json({ Error: "An error occurred while fetching data" });
-    }
-} )
+app.post("/addProduct", async function (req, res) {
+  const { title, category, price } = req.body;
 
+
+  console.log(req.body)
+  try {
+    const response = await fetch("https://dummyjson.com/products/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        category,
+        price
+      }),
+    });
+    const data = await response.json();
+    
+    res.status(201).json({ data: data });
+
+  } catch (error) {
+    console.log("Error:", error);
+    res.status(500).json({ Error: "An error occurred while fetching data" });
+  }
+});
+
+app.get("/search", async function (req, res) {
+  const searchQuery = req.query.searchQuery;
+
+  try {
+    const response = await fetch(
+      `https://dummyjson.com/products/search?q=${searchQuery}`
+    );
+    const data = await response.json();
+    res.status(200).json({ data: data });
+  } catch (error) {
+    console.log("Error:", error);
+    res.status(500).json({ Error: "An error occurred while fetching data" });
+  }
+});
 // Set up a default "catch all" route to use when someone visits a route
 // that we haven't built
 app.get("*", (req, res) => {
