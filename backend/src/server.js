@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 //Add routers below:
-app.get("/", async function(req, res) {
+app.get("/products", async function(req, res) {
     try {
         const response = await fetch("https://dummyjson.com/products");
         const data = await response.json();
