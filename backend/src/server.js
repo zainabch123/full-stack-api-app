@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 //Add routers below:
 app.get("/products", async function (req, res) {
   try {
-    const response = await fetch("https://dummyjson.com/pros");
+    const response = await fetch("https://dummyjson.com/products");
      if (!response.ok) {
        throw new Error(
          `Failed to fetch: ${response.status} ${response.statusText}`

@@ -13,6 +13,7 @@ function App() {
     category: "",
     price: "",
   });
+  const [productsToDisplay, setProductsToDisplay] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +24,7 @@ function App() {
           throw new Error(data.Error);
         }
         setProducts(data.data.products);
+        setProductsToDisplay(data.data.products);
       } catch (Error) {
         setError(Error.message);
       } finally {
@@ -74,12 +76,29 @@ function App() {
     }
     setNewProduct({ title: "", category: "", price: "" });
   };
+
+  function sortProducts(event) {
+    if (event.target.value === "name") {
+      const sortedProducts = [...products].sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
+      setProductsToDisplay(sortedProducts);
+    } else if (event.target.value === "price") {
+      const sortedProducts = [...products.sort]((a, b) => a.price - b.price);
+      setProductsToDisplay(sortedProducts);
+    } else {
+      console.log("no sorted needed");
+
+      setProductsToDisplay(products);
+    }
+  }
+
   console.log("products:", products);
   console.log(newProduct);
 
   return (
     <div className="container">
-      <header style={{ backgroundColor: "red" }}>
+      <header style={{ border: "2px solid red" }}>
         <div className="search-bar-wrapper">
           <input
             className="search-bar"
@@ -97,8 +116,16 @@ function App() {
           </button>
         </div>
       </header>
-      <aside style={{ backgroundColor: "green" }}>
-        <div>Left Aside</div>
+      <aside style={{ border: "2px solid green" }}>
+        <div>
+          <label htmlFor="sort">Sort By: </label>
+          <select name="sort" id="sort" onChange={sortProducts}>
+            <option value="default">Select Type</option>
+            <option value="name">Name</option>
+            <option value="price">Price</option>
+          </select>
+        </div>
+
         <form className="product-form" onSubmit={handleFormSubmit}>
           Product Form
           <input
@@ -125,13 +152,26 @@ function App() {
           <button type="submit">Add New Product</button>
         </form>
       </aside>
-      <main style={{ backgroundColor: "lightblue" }}>
+      <main style={{ border: "2px solid lightblue" }}>
         {isLoading && <div>Loading...</div>}
         {error && <div>{error}</div>}
 
         <ul className="product-list">
-          {products.map((product) => (
-            <li key={product.id}>{product.title}</li>
+          {productsToDisplay.map((product) => (
+            <li key={product.id}>
+              <div
+                className="product-image"
+                style={{ border: "1px solid black" }}
+              >
+                <img src={product.thumbnail} alt={`${product.title} image`} />
+              </div>
+              <div>
+                <h3>{product.title}</h3>
+                <p>{product.description}</p>
+                <p>{product.category}</p>
+                <p>Price: £{product.price}</p>
+              </div>
+            </li>
           ))}
         </ul>
       </main>
