@@ -79,17 +79,25 @@ function App() {
 
   function sortProducts(event) {
     if (event.target.value === "name") {
-      const sortedProducts = [...products].sort((a, b) =>
+      const sortedProducts = [...productsToDisplay].sort((a, b) =>
         a.title.localeCompare(b.title)
       );
       setProductsToDisplay(sortedProducts);
     } else if (event.target.value === "price") {
-      const sortedProducts = [...products.sort]((a, b) => a.price - b.price);
+      const sortedProducts = [...productsToDisplay].sort(
+        (a, b) => a.price - b.price
+      );
       setProductsToDisplay(sortedProducts);
     } else {
       console.log("no sorted needed");
 
       setProductsToDisplay(products);
+    }
+  }
+
+  function filterProducts(event) {
+    if (event.target.value === "beauty") {
+      setProductsToDisplay(productsToDisplay.filter((item) => item.category === 'beauty'))
     }
   }
 
@@ -118,12 +126,22 @@ function App() {
       </header>
       <aside style={{ border: "2px solid green" }}>
         <div>
-          <label htmlFor="sort">Sort By: </label>
-          <select name="sort" id="sort" onChange={sortProducts}>
-            <option value="default">Select Type</option>
-            <option value="name">Name</option>
-            <option value="price">Price</option>
-          </select>
+          <div>
+            <label htmlFor="sort">Sort By: </label>
+            <select name="sort" id="sort" onChange={sortProducts}>
+              <option value="default">Select Type</option>
+              <option value="name">Name</option>
+              <option value="price">Price</option>
+            </select>
+          </div>
+          <label htmlFor="filter">Filter: </label>
+          <div>
+            <select name="filter" id="filter" onChange={filterProducts}>
+              <option value="default">Select Type</option>
+              <option value="beauty">Beauty</option>
+              <option value="fragrances">Frangrances</option>
+            </select>
+          </div>
         </div>
 
         <form className="product-form" onSubmit={handleFormSubmit}>
