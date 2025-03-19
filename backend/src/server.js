@@ -19,8 +19,14 @@ app.use(express.urlencoded({ extended: true }));
 //Add routers below:
 app.get("/products", async function (req, res) {
   try {
-    const response = await fetch("https://dummyjson.com/products");
+    const response = await fetch("https://dummyjson.com/pros");
+     if (!response.ok) {
+       throw new Error(
+         `Failed to fetch: ${response.status} ${response.statusText}`
+       );
+     }
     const data = await response.json();
+    
     res.status(200).json({ data: data });
   } catch (error) {
     console.log("Error:", error);
@@ -30,9 +36,6 @@ app.get("/products", async function (req, res) {
 
 app.post("/addProduct", async function (req, res) {
   const { title, category, price } = req.body;
-
-
-  console.log(req.body)
   try {
     const response = await fetch("https://dummyjson.com/products/add", {
       method: "POST",
@@ -60,6 +63,7 @@ app.get("/search", async function (req, res) {
     const response = await fetch(
       `https://dummyjson.com/products/search?q=${searchQuery}`
     );
+
     const data = await response.json();
     res.status(200).json({ data: data });
   } catch (error) {
